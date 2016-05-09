@@ -1,0 +1,40 @@
+{
+  "name": "zs-polytoken",
+  "version": "0.0.1",
+  "description": "POLYTOKEN",
+  "main": "./dist/lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@git.zipscene.com:zsapilibs/zs-polytoken.git"
+  },
+  "scripts": {
+    "lint": "node ./node_modules/.bin/eslint . || exit 0",
+    "docs": "node ./node_modules/.bin/yuidoc .",
+    "test": "npm run-script build && node ./node_modules/.bin/mocha ./dist/test -R spec",
+    "build": "rm -rf dist && ./node_modules/.bin/broccoli build dist && rm -rf tmp",
+    "prepublish": "npm run-script build && npm run-script docs"
+  },
+  "dependencies": {
+    "babel-runtime": "6.6.1",
+    "lodash": "^4.12.0",
+    "pasync": "^1.4.1",
+    "xerror": "^1.1.1"
+  },
+  "devDependencies": {
+    "broccoli": "^0.16.9",
+    "broccoli-babel-transpiler": "^5.5.0",
+    "broccoli-cli": "^1.0.0",
+    "broccoli-merge-trees": "^1.1.1",
+    "broccoli-static-compiler": "^0.2.2",
+    "broccoli-wrap": "0.0.2",
+    "chai": "^3.5.0",
+    "es6-promise": "^3.1.2",
+    "eslint": "^2.9.0",
+    "mocha": "^2.4.5",
+    "source-map-support": "^0.4.0",
+    "yuidocjs": "^0.10.1"
+  },
+  "publishConfig": {
+    "registry": "https://npm.zipscene.com/"
+  }
+}
