@@ -1,5 +1,5 @@
 let expect = require('chai').expect;
-const { NumericDimension } = require('../lib/core-dimensions');
+const { coreDimensions: { NumericDimension } } = require('../lib');
 
 describe('NumericDimension', function() {
 	before(function() {
@@ -81,8 +81,8 @@ describe('NumericDimension', function() {
 				this.numeric.validateRange(range);
 			} catch (ex) {
 				expect(ex).to.exist;
-				expect(ex).to.have.property('message', 'Invalid Range');
-				expect(ex).to.have.property('data', 'Range of numberic dimensions should be an array');
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property('message', 'Range of numberic dimensions should be an array');
 			}
 		});
 
@@ -92,8 +92,8 @@ describe('NumericDimension', function() {
 				this.numeric.validateRange(range);
 			} catch (ex) {
 				expect(ex).to.exist;
-				expect(ex).to.have.property('message', 'Invalid Range');
-				expect(ex).to.have.property('data', 'Range of numberic dimensions should have length of two');
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property('message', 'Range of numberic dimensions should have length of two');
 			}
 		});
 
@@ -103,8 +103,8 @@ describe('NumericDimension', function() {
 				this.numeric.validateRange(range);
 			} catch (ex) {
 				expect(ex).to.exist;
-				expect(ex).to.have.property('message', 'Invalid Range');
-				expect(ex).to.have.property('data', 'Range of numberic dimensions should consist of numbers');
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property('message', 'Range of numberic dimensions should consist of numbers');
 			}
 		});
 
@@ -114,8 +114,8 @@ describe('NumericDimension', function() {
 				this.numeric.validateRange(range);
 			} catch (ex) {
 				expect(ex).to.exist;
-				expect(ex).to.have.property('message', 'Invalid Range');
-				expect(ex).to.have.property('data', 'Range upper bound must be greater than range lower bound');
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property('message', 'Range upper bound must be greater than range lower bound');
 			}
 		});
 	});
@@ -145,8 +145,8 @@ describe('NumericDimension', function() {
 				this.numeric.validatePoint(point);
 			} catch (ex) {
 				expect(ex).to.exist;
-				expect(ex).to.have.property('message', 'Invalid Point');
-				expect(ex).to.have.property('data', 'Numeric point should be a number');
+				expect(ex).to.have.property('code', 'invalid_point');
+				expect(ex).to.have.property('message', 'Numeric point should be a number');
 
 			}
 		});
