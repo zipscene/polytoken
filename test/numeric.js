@@ -82,7 +82,7 @@ describe('NumericDimension', function() {
 			} catch (ex) {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_range');
-				expect(ex).to.have.property('message', 'Range of numberic dimensions should be an array');
+				expect(ex).to.have.property('message', 'Range of numeric dimension should be an array');
 			}
 		});
 
@@ -93,7 +93,7 @@ describe('NumericDimension', function() {
 			} catch (ex) {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_range');
-				expect(ex).to.have.property('message', 'Range of numberic dimensions should have length of two');
+				expect(ex).to.have.property('message', 'Range of numeric dimension should have length of two');
 			}
 		});
 
@@ -104,7 +104,7 @@ describe('NumericDimension', function() {
 			} catch (ex) {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_range');
-				expect(ex).to.have.property('message', 'Range of numberic dimensions should consist of numbers');
+				expect(ex).to.have.property('message', 'Range of numeric dimension should consist of numbers');
 			}
 		});
 
@@ -115,7 +115,8 @@ describe('NumericDimension', function() {
 			} catch (ex) {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_range');
-				expect(ex).to.have.property('message', 'Range upper bound must be greater than range lower bound');
+				expect(ex).to.have.property('message',
+					'upper bound of numeric dimension must be greater than range lower bound');
 			}
 		});
 	});

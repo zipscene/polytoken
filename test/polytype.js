@@ -72,7 +72,7 @@ describe('Polytype', function() {
 			} catch (ex) {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_range');
-				expect(ex).to.have.property('message', 'Range of numberic dimensions should be an array');
+				expect(ex).to.have.property('message', 'Range of numeric1 dimension should be an array');
 			}
 		});
 	});
