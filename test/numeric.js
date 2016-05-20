@@ -1,5 +1,6 @@
 let expect = require('chai').expect;
 const { coreDimensions: { NumericDimension } } = require('../lib');
+const _ = require('lodash');
 
 describe('NumericDimension', function() {
 	before(function() {
@@ -15,6 +16,12 @@ describe('NumericDimension', function() {
 				type: 'exponential',
 				base: 3,
 				stepNum: 4
+			}
+		});
+		this.numeric3 = new NumericDimension('numeric3', {
+			step: {
+				type: 'customized',
+				steps: [ 2, 3, 5, 9 ]
 			}
 		});
 	});
@@ -46,6 +53,15 @@ describe('NumericDimension', function() {
 			expect(numeric2).to.have.property('steps');
 			expect(numeric2.steps).to.be.an('array');
 			expect(numeric2.steps).to.deep.equal([ 81, 27, 9, 3 ]);
+
+			let numeric3 = this.numeric3;
+			expect(numeric3).to.have.property('name', 'numeric3');
+			expect(numeric3.tokenConfig).to.deep.equal({
+				step: {
+					type: 'customized',
+					steps: [ 9, 5, 3, 2 ]
+				}
+			});
 		});
 	});
 
@@ -53,6 +69,7 @@ describe('NumericDimension', function() {
 		it('should return name of the dimension', function() {
 			expect(this.numeric).to.have.property('name', 'numeric');
 			expect(this.numeric2).to.have.property('name', 'numeric2');
+			expect(this.numeric3).to.have.property('name', 'numeric3');
 		});
 	});
 
@@ -61,18 +78,21 @@ describe('NumericDimension', function() {
 			let range = [ 3, 18 ];
 			expect(this.numeric.validateRange(range)).to.be.true;
 			expect(this.numeric2.validateRange(range)).to.be.true;
+			expect(this.numeric3.validateRange(range)).to.be.true;
 		});
 
 		it('should return true for valid range containing float numbers', function() {
 			let range = [ 1.52, 9.38 ];
 			expect(this.numeric.validateRange(range)).to.be.true;
 			expect(this.numeric2.validateRange(range)).to.be.true;
+			expect(this.numeric3.validateRange(range)).to.be.true;
 		});
 
 		it('should return true for valid range containing negative numbers', function() {
 			let range = [ -3, 2.18 ];
 			expect(this.numeric.validateRange(range)).to.be.true;
 			expect(this.numeric2.validateRange(range)).to.be.true;
+			expect(this.numeric3.validateRange(range)).to.be.true;
 		});
 
 		it('should throw error when range isn\'t an array', function() {
@@ -126,18 +146,21 @@ describe('NumericDimension', function() {
 			let point = 12;
 			expect(this.numeric.validatePoint(point)).to.be.true;
 			expect(this.numeric2.validatePoint(point)).to.be.true;
+			expect(this.numeric3.validatePoint(point)).to.be.true;
 		});
 
 		it('should return true for a valid float point', function() {
 			let point = 1.34;
 			expect(this.numeric.validatePoint(point)).to.be.true;
 			expect(this.numeric2.validatePoint(point)).to.be.true;
+			expect(this.numeric3.validatePoint(point)).to.be.true;
 		});
 
 		it('should return true for a valid negative point', function() {
 			let point = -3;
 			expect(this.numeric.validatePoint(point)).to.be.true;
 			expect(this.numeric2.validatePoint(point)).to.be.true;
+			expect(this.numeric3.validatePoint(point)).to.be.true;
 		});
 
 		it('should throw error if point is not a number', function() {
@@ -173,17 +196,8 @@ describe('NumericDimension', function() {
 			expect(tokens).to.include('32^32');
 			expect(tokens).to.include('16^16');
 
-			range = [ 18, 30 ];
-			tokens = this.numeric2.getRangeTokens(range);
-			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(2);
-			expect(tokens).to.include('18^9');
-			expect(tokens).to.include('27^3');
-		});
-
-		it('should return all tokens for range that doesn\'t fall on grid', function() {
-			let range = [ 2, 254 ];
-			let tokens = this.numeric.getRangeTokens(range);
+			range = [ 2, 254 ];
+			tokens = this.numeric.getRangeTokens(range);
 			expect(tokens).to.be.an('array');
 			expect(tokens).to.have.length(12);
 			expect(tokens).to.include('64^64');
@@ -199,8 +213,24 @@ describe('NumericDimension', function() {
 			expect(tokens).to.include('4^4');
 			expect(tokens).to.include('2^2');
 
-			range = [ 2, 3 ];
-			tokens = this.numeric.getRangeTokens(range);
+			range = [ 18, 30 ];
+			tokens = this.numeric2.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(2);
+			expect(tokens).to.include('18^9');
+			expect(tokens).to.include('27^3');
+
+			range = [ 18, 30 ];
+			tokens = this.numeric3.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(2);
+			expect(tokens).to.include('18^9');
+			expect(tokens).to.include('27^3');
+		});
+
+		it('should return all tokens for range that doesn\'t fall on grid', function() {
+			let range = [ 2, 3 ];
+			let tokens = this.numeric.getRangeTokens(range);
 			expect(tokens).to.be.an('array');
 			expect(tokens).to.have.length(1);
 			expect(tokens).to.include('2^2');
@@ -235,6 +265,19 @@ describe('NumericDimension', function() {
 			expect(tokens).to.include('9^9');
 			expect(tokens).to.include('6^3');
 			expect(tokens).to.include('3^3');
+
+			range = [ 4.1, 40.7 ];
+			tokens = this.numeric3.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(8);
+			expect(tokens).to.include('9^9');
+			expect(tokens).to.include('18^9');
+			expect(tokens).to.include('27^9');
+			expect(tokens).to.include('36^3');
+			expect(tokens).to.include('38^2');
+			expect(tokens).to.include('40^2');
+			expect(tokens).to.include('6^3');
+			expect(tokens).to.include('4^2');
 		});
 	});
 
@@ -252,6 +295,31 @@ describe('NumericDimension', function() {
 			expect(tokens).to.include('0^64');
 			expect(tokens).to.include('0^128');
 			expect(tokens).to.include('0^256');
+
+			tokens = this.numeric3.getTokensForPoint(point);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(4);
+			expect(tokens).to.include('0^9');
+			expect(tokens).to.include('0^5');
+			expect(tokens).to.include('0^3');
+			expect(tokens).to.include('2^2');
+		});
+
+		it('should generate tokens intersect with tokens of range that covers this point', function() {
+			let range = [ 2, 6 ];
+			let point = 3.7;
+			let rangeTokens = this.numeric.getRangeTokens(range);
+			let pointTokens = this.numeric.getTokensForPoint(point);
+			let intersection = _.intersection(rangeTokens, pointTokens);
+			expect(intersection).to.have.length.above(0);
+			expect(intersection).to.deep.equal([ '2^2' ]);
+
+			rangeTokens = this.numeric3.getRangeTokens(range);
+			pointTokens = this.numeric3.getTokensForPoint(point);
+			intersection = _.intersection(rangeTokens, pointTokens);
+			expect(intersection).to.have.length.above(0);
+			expect(intersection).to.include('3^3');
+			expect(intersection).to.include('2^2');
 		});
 	});
 });
