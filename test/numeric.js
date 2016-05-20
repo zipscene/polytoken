@@ -7,14 +7,16 @@ describe('NumericDimension', function() {
 		this.numeric = new NumericDimension('numeric', {
 			step: {
 				type: 'exponential',
-				base: 2,
+				base: 1,
+				exponent: 2,
 				stepNum: 8
 			}
 		});
 		this.numeric2 = new NumericDimension('numeric2', {
 			step: {
 				type: 'exponential',
-				base: 3,
+				base: 1,
+				exponent: 3,
 				stepNum: 4
 			}
 		});
@@ -22,6 +24,14 @@ describe('NumericDimension', function() {
 			step: {
 				type: 'customized',
 				steps: [ 2, 3, 5, 9 ]
+			}
+		});
+		this.numeric4 = new NumericDimension('numeric4', {
+			step: {
+				type: 'exponential',
+				base: 2,
+				exponent: 3,
+				stepNum: 4
 			}
 		});
 	});
@@ -33,7 +43,8 @@ describe('NumericDimension', function() {
 			expect(numeric.tokenConfig).to.deep.equal({
 				step: {
 					type: 'exponential',
-					base: 2,
+					base: 1,
+					exponent: 2,
 					stepNum: 8
 				}
 			});
@@ -46,7 +57,8 @@ describe('NumericDimension', function() {
 			expect(numeric2.tokenConfig).to.deep.equal({
 				step: {
 					type: 'exponential',
-					base: 3,
+					base: 1,
+					exponent: 3,
 					stepNum: 4
 				}
 			});
@@ -62,6 +74,20 @@ describe('NumericDimension', function() {
 					steps: [ 9, 5, 3, 2 ]
 				}
 			});
+
+			let numeric4 = this.numeric4;
+			expect(numeric4).to.have.property('name', 'numeric4');
+			expect(numeric4.tokenConfig).to.deep.equal({
+				step: {
+					type: 'exponential',
+					base: 2,
+					exponent: 3,
+					stepNum: 4
+				}
+			});
+			expect(numeric4).to.have.property('steps');
+			expect(numeric4.steps).to.be.an('array');
+			expect(numeric4.steps).to.deep.equal([ 162, 54, 18, 6 ]);
 		});
 	});
 
@@ -70,6 +96,7 @@ describe('NumericDimension', function() {
 			expect(this.numeric).to.have.property('name', 'numeric');
 			expect(this.numeric2).to.have.property('name', 'numeric2');
 			expect(this.numeric3).to.have.property('name', 'numeric3');
+			expect(this.numeric4).to.have.property('name', 'numeric4');
 		});
 	});
 
@@ -79,6 +106,7 @@ describe('NumericDimension', function() {
 			expect(this.numeric.validateRange(range)).to.be.true;
 			expect(this.numeric2.validateRange(range)).to.be.true;
 			expect(this.numeric3.validateRange(range)).to.be.true;
+			expect(this.numeric4.validateRange(range)).to.be.true;
 		});
 
 		it('should return true for valid range containing float numbers', function() {
@@ -86,6 +114,7 @@ describe('NumericDimension', function() {
 			expect(this.numeric.validateRange(range)).to.be.true;
 			expect(this.numeric2.validateRange(range)).to.be.true;
 			expect(this.numeric3.validateRange(range)).to.be.true;
+			expect(this.numeric4.validateRange(range)).to.be.true;
 		});
 
 		it('should return true for valid range containing negative numbers', function() {
@@ -93,6 +122,7 @@ describe('NumericDimension', function() {
 			expect(this.numeric.validateRange(range)).to.be.true;
 			expect(this.numeric2.validateRange(range)).to.be.true;
 			expect(this.numeric3.validateRange(range)).to.be.true;
+			expect(this.numeric4.validateRange(range)).to.be.true;
 		});
 
 		it('should throw error when range isn\'t an array', function() {
@@ -147,6 +177,7 @@ describe('NumericDimension', function() {
 			expect(this.numeric.validatePoint(point)).to.be.true;
 			expect(this.numeric2.validatePoint(point)).to.be.true;
 			expect(this.numeric3.validatePoint(point)).to.be.true;
+			expect(this.numeric4.validatePoint(point)).to.be.true;
 		});
 
 		it('should return true for a valid float point', function() {
@@ -154,6 +185,7 @@ describe('NumericDimension', function() {
 			expect(this.numeric.validatePoint(point)).to.be.true;
 			expect(this.numeric2.validatePoint(point)).to.be.true;
 			expect(this.numeric3.validatePoint(point)).to.be.true;
+			expect(this.numeric4.validatePoint(point)).to.be.true;
 		});
 
 		it('should return true for a valid negative point', function() {
@@ -161,6 +193,7 @@ describe('NumericDimension', function() {
 			expect(this.numeric.validatePoint(point)).to.be.true;
 			expect(this.numeric2.validatePoint(point)).to.be.true;
 			expect(this.numeric3.validatePoint(point)).to.be.true;
+			expect(this.numeric4.validatePoint(point)).to.be.true;
 		});
 
 		it('should throw error if point is not a number', function() {
@@ -171,7 +204,6 @@ describe('NumericDimension', function() {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_point');
 				expect(ex).to.have.property('message', 'Numeric point should be a number');
-
 			}
 		});
 	});
@@ -226,6 +258,12 @@ describe('NumericDimension', function() {
 			expect(tokens).to.have.length(2);
 			expect(tokens).to.include('18^9');
 			expect(tokens).to.include('27^3');
+
+			range = [ 6, 12 ];
+			tokens = this.numeric4.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(1);
+			expect(tokens).to.include('6^6');
 		});
 
 		it('should return all tokens for range that doesn\'t fall on grid', function() {
@@ -278,6 +316,15 @@ describe('NumericDimension', function() {
 			expect(tokens).to.include('40^2');
 			expect(tokens).to.include('6^3');
 			expect(tokens).to.include('4^2');
+
+			range = [ 9, 42 ];
+			tokens = this.numeric4.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(4);
+			expect(tokens).to.include('18^18');
+			expect(tokens).to.include('36^6');
+			expect(tokens).to.include('12^6');
+			expect(tokens).to.include('6^6');
 		});
 	});
 
@@ -303,6 +350,14 @@ describe('NumericDimension', function() {
 			expect(tokens).to.include('0^5');
 			expect(tokens).to.include('0^3');
 			expect(tokens).to.include('2^2');
+
+			tokens = this.numeric4.getTokensForPoint(point);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(4);
+			expect(tokens).to.include('0^6');
+			expect(tokens).to.include('0^18');
+			expect(tokens).to.include('0^54');
+			expect(tokens).to.include('0^162');
 		});
 
 		it('should generate tokens intersect with tokens of range that covers this point', function() {
