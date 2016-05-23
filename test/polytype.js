@@ -6,14 +6,16 @@ describe('Polytype', function() {
 		this.numeric1 = new NumericDimension('numeric1', {
 			step: {
 				type: 'exponential',
-				base: 2,
+				base: 1,
+				exponent: 2,
 				stepNum: 4
 			}
 		});
 		this.numeric2 = new NumericDimension('numeric2', {
 			step: {
 				type: 'exponential',
-				base: 3,
+				base: 1,
+				exponent: 3,
 				stepNum: 2
 			}
 		});
@@ -72,7 +74,7 @@ describe('Polytype', function() {
 			} catch (ex) {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_range');
-				expect(ex).to.have.property('message', 'Range of numberic dimensions should be an array');
+				expect(ex).to.have.property('message', 'Range of numeric1 dimension should be an array');
 			}
 		});
 	});
