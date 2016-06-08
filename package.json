@@ -20,7 +20,8 @@
     "lodash": "^4.12.0",
     "moment": "^2.13.0",
     "pasync": "^1.4.1",
-    "xerror": "^1.1.1"
+    "xerror": "^1.1.1",
+    "zs-objtools": "^1.6.2"
   },
   "devDependencies": {
     "broccoli": "^0.16.9",
