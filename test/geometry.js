@@ -237,7 +237,8 @@ describe('geometry', function() {
 			let insideLinearRing = [ [ 1, 1 ], [ 3, 1 ], [ 3, 3 ], [ 1, 3 ], [ 1, 1 ] ];
 			expect(geometry.getLinearRingsIntersectState(outsideLinearRing, insideLinearRing)).to.equal('inside');
 
-			outsideLinearRing = [ [ 1, 0 ], [ 2, 1 ], [ 2, 2 ], [ 1, 3 ], [ -1, 3 ], [ -2, 2 ], [ -2, 1 ], [ -1, 0 ], [ 1, 0 ] ];
+			outsideLinearRing = [ [ 1, 0 ], [ 2, 1 ], [ 2, 2 ], [ 1, 3 ], [ -1, 3 ],
+				[ -2, 2 ], [ -2, 1 ], [ -1, 0 ], [ 1, 0 ] ];
 			insideLinearRing = [ [ 1, 1 ], [ 1, 2 ], [ -1, 2 ], [ -1, 1 ], [ 1, 1 ] ];
 			expect(geometry.getLinearRingsIntersectState(outsideLinearRing, insideLinearRing)).to.equal('inside');
 
@@ -297,7 +298,8 @@ describe('geometry', function() {
 		});
 
 		it('should return \'outside\' for convex linearRing outside convex linearRing', function() {
-			let linearRing1 = [ [ 1, 0 ], [ 2, 1 ], [ 2, 2 ], [ 1, 3 ], [ -1, 3 ], [ -2, 2 ], [ -2, 1 ], [ -1, 0 ], [ 1, 0 ] ];
+			let linearRing1 = [ [ 1, 0 ], [ 2, 1 ], [ 2, 2 ], [ 1, 3 ], [ -1, 3 ],
+				[ -2, 2 ], [ -2, 1 ], [ -1, 0 ], [ 1, 0 ] ];
 			let linearRing2 = [ [ 6, 0 ], [ 7, 0 ], [ 7, 1 ], [ 6, 1 ], [ 6, 0 ] ];
 			expect(geometry.getLinearRingsIntersectState(linearRing1, linearRing2)).to.equal('outside');
 
@@ -526,10 +528,6 @@ describe('geometry', function() {
 			let topLeftVertex = [ 5, 6 ];
 			let size = 2;
 			expect(geometry.squareLinearRingIntersectState(linearRing, topLeftVertex, size)).to.equal('outside');
-
-			// linearRing = [];
-			// topLeftVertex = [];
-			// expect(geometry.squareLinearRingIntersectState(linearRing, topLeftVertex, size)).to.equal('outside');
 		});
 
 		it('should return \'intersect\' for sqaure intersects linearRing', function() {

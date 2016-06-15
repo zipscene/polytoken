@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { LongLatDimension } = require('../lib/core-dimensions');
 
-describe.only('LongLatDimension', function() {
+describe('LongLatDimension', function() {
 	before(function() {
 		this.longLatDimension = new LongLatDimension({
 			step: {
@@ -53,6 +53,22 @@ describe.only('LongLatDimension', function() {
 				coordinates: [
 					[ [ 100.0, 0.0 ], [ 104.0, 0.0 ], [ 104.0, 4.0 ], [ 100.0, 4.0 ], [ 100.0, 0.0 ] ],
 					[ [ 101.0, 0.0 ], [ 103.0, 0.0 ], [ 103.0, 2.0 ], [ 101.0, 2.0 ], [ 101.0, 0.0 ] ]
+				]
+			};
+			expect(this.longLatDimension.validateRange(range)).to.be.true;
+
+			range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 178, 0 ], [ 182, 0 ], [ 182, 2 ], [ 178, 2 ], [ 178, 0 ] ]
+				]
+			};
+			expect(this.longLatDimension.validateRange(range)).to.be.true;
+
+			range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ -178, 0 ], [ -182, 0 ], [ -182, 2 ], [ -178, 2 ], [ -178, 0 ] ]
 				]
 			};
 			expect(this.longLatDimension.validateRange(range)).to.be.true;
@@ -164,6 +180,18 @@ describe.only('LongLatDimension', function() {
 				expect(ex).to.have.property('code', 'invalid_point');
 				expect(ex).to.have.property('message', 'point of long-lat dimension is not a valid point');
 			}
+
+			point = {
+				type: 'Point',
+				coordinates: [ 182, 40 ]
+			};
+			try {
+				this.longLatDimension.validatePoint(point);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_point');
+				expect(ex).to.have.property('message', 'point of long-lat dimension is not a valid point');
+			}
 		});
 	});
 
@@ -198,19 +226,19 @@ describe.only('LongLatDimension', function() {
 			expect(tokens).to.have.length(1);
 			expect(tokens).to.include('0,32^32');
 
-			// range = {
-			// 	type: 'Polygon',
-			// 	coordinates: [
-			// 		[ [ 0, 0 ], [ 1, 1 ], [ 1, 2 ], [ 0, 3 ], [ -1, 2 ], [ -1, 1 ], [ 0, 0 ] ]
-			// 	]
-			// };
-			// tokens = this.longLatDimension.getRangeTokens(range);
-			// expect(tokens).to.be.an('array');
-			// expect(tokens).to.have.length(4);
-			// expect(tokens).to.include('0,2^2');
-			// expect(tokens).to.include('0,4^2');
-			// expect(tokens).to.include('-2,2^2');
-			// expect(tokens).to.include('-2,4^2');
+			range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 0, 0 ], [ 1, 1 ], [ 1, 2 ], [ 0, 3 ], [ -1, 2 ], [ -1, 1 ], [ 0, 0 ] ]
+				]
+			};
+			tokens = this.longLatDimension.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(4);
+			expect(tokens).to.include('0,2^2');
+			expect(tokens).to.include('0,4^2');
+			expect(tokens).to.include('-2,2^2');
+			expect(tokens).to.include('-2,4^2');
 
 			range = {
 				type: 'Polygon',
@@ -268,10 +296,97 @@ describe.only('LongLatDimension', function() {
 			expect(tokens).to.include('4,4^4');
 			expect(tokens).to.include('0,8^4');
 			expect(tokens).to.include('4,8^4');
+
+			range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 0, 0 ], [ 2, 2 ], [ 2, 4 ], [ 0, 6 ], [ -2, 4 ], [ -2, 2 ], [ 0, 0 ] ],
+					[ [ -1, 2 ], [ 1, 2 ], [ 1, 4 ], [ -1, 4 ], [ -1, 2 ] ]
+				]
+			};
+			tokens = this.longLatDimension.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(6);
+			expect(tokens).to.include('0,2^2');
+			expect(tokens).to.include('0,4^2');
+			expect(tokens).to.include('0,6^2');
+			expect(tokens).to.include('-2,2^2');
+			expect(tokens).to.include('-2,4^2');
+			expect(tokens).to.include('-2,6^2');
 		});
 
-		it('should return correct tokens for range covering meridian', function() {});
+		it('should return correct tokens for range covering meridian', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 178, 0 ], [ 184, 0 ], [ 184, 2 ], [ 178, 2 ], [ 178, 0 ] ]
+				]
+			};
+			let tokens = this.longLatDimension.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(3);
+			expect(tokens).to.include('178,2^2');
+			expect(tokens).to.include('180,2^2');
+			expect(tokens).to.include('182,2^2');
+		});
 	});
 
-	describe('#getTokensForPoint', function() {});
+	describe('#getTokensForPoint', function() {
+		it('should return all the tokens for given point', function() {
+			let point = {
+				type: 'Point',
+				coordinates: [ 2, 3 ]
+			};
+			let tokens = this.longLatDimension.getTokensForPoint(point);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(18);
+			expect(tokens).to.include('0,256^256');
+			expect(tokens).to.include('0,128^128');
+			expect(tokens).to.include('0,64^64');
+			expect(tokens).to.include('0,32^32');
+			expect(tokens).to.include('0,16^16');
+			expect(tokens).to.include('0,8^8');
+			expect(tokens).to.include('0,4^4');
+			expect(tokens).to.include('2,4^2');
+			expect(tokens).to.include('0,4^2');
+			expect(tokens).to.include('-512,256^256');
+			expect(tokens).to.include('-384,128^128');
+			expect(tokens).to.include('-384,64^64');
+			expect(tokens).to.include('-384,32^32');
+			expect(tokens).to.include('-368,16^16');
+			expect(tokens).to.include('-360,8^8');
+			expect(tokens).to.include('-360,4^4');
+			expect(tokens).to.include('-358,4^2');
+			expect(tokens).to.include('-360,4^2');
+
+			point = {
+				type: 'Point',
+				coordinates: [ 2, 2 ]
+			};
+			tokens = this.longLatDimension.getTokensForPoint(point);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.include('0,256^256');
+			expect(tokens).to.include('0,128^128');
+			expect(tokens).to.include('0,64^64');
+			expect(tokens).to.include('0,32^32');
+			expect(tokens).to.include('0,16^16');
+			expect(tokens).to.include('0,8^8');
+			expect(tokens).to.include('0,4^4');
+			expect(tokens).to.include('2,4^2');
+			expect(tokens).to.include('2,2^2');
+			expect(tokens).to.include('0,4^2');
+			expect(tokens).to.include('0,2^2');
+			expect(tokens).to.include('-512,256^256');
+			expect(tokens).to.include('-384,128^128');
+			expect(tokens).to.include('-384,64^64');
+			expect(tokens).to.include('-384,32^32');
+			expect(tokens).to.include('-368,16^16');
+			expect(tokens).to.include('-360,8^8');
+			expect(tokens).to.include('-360,4^4');
+			expect(tokens).to.include('-358,4^2');
+			expect(tokens).to.include('-360,4^2');
+			expect(tokens).to.include('-358,2^2');
+			expect(tokens).to.include('-360,2^2');
+		});
+	});
 });
