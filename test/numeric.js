@@ -377,4 +377,16 @@ describe('NumericDimension', function() {
 			expect(intersection).to.include('2^2');
 		});
 	});
+
+	describe('#checkRangeInclusion', function() {
+		it('should accurately check numbers against ranges', function() {
+			let dimension = this.numeric;
+			let range = [ 1, 5 ];
+			expect(dimension.checkRangeInclusion(range, -2)).to.equal(false);
+			expect(dimension.checkRangeInclusion(range, 1)).to.equal(true);
+			expect(dimension.checkRangeInclusion(range, 4)).to.equal(true);
+			expect(dimension.checkRangeInclusion(range, 5)).to.equal(true);
+			expect(dimension.checkRangeInclusion(range, 22)).to.equal(false);
+		});
+	});
 });
