@@ -1,11 +1,11 @@
 const _ = require('lodash');
 const moment = require('moment');
 const { expect } = require('chai');
-const { coreDimensions: { TimeDimension } } = require('../lib');
+const { coreDimensions: { TimeDetailedDimension } } = require('../lib');
 
 describe('TimeDimension', function() {
 	before(function() {
-		this.time = new TimeDimension({
+		this.time = new TimeDetailedDimension({
 			step: {
 				type: 'customized',
 				steps: [ 1000, 60000, 3600000, 86400000 ]
@@ -15,8 +15,8 @@ describe('TimeDimension', function() {
 
 	describe('#constructor', function() {
 		it('should set name and tokenConfig', function() {
-			expect(this.time).to.be.instanceof(TimeDimension);
-			expect(this.time).to.have.property('name', 'time');
+			expect(this.time).to.be.instanceof(TimeDetailedDimension);
+			expect(this.time).to.have.property('name', 'TimeDetailed');
 			expect(this.time.tokenConfig).to.deep.equal({
 				step: {
 					type: 'customized',
@@ -29,7 +29,7 @@ describe('TimeDimension', function() {
 	describe('#getName', function() {
 		it('should get name of time dimension', function() {
 			let name = this.time.getName();
-			expect(name).to.equal('time');
+			expect(name).to.equal('TimeDetailed');
 		});
 	});
 
