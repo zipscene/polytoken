@@ -7,7 +7,7 @@ describe('NumericDimension', function() {
 		this.numeric = new NumericDimension('numeric', {
 			step: {
 				type: 'exponential',
-				base: 1,
+				base: 2,
 				exponent: 2,
 				stepNum: 8
 			}
@@ -15,7 +15,7 @@ describe('NumericDimension', function() {
 		this.numeric2 = new NumericDimension('numeric2', {
 			step: {
 				type: 'exponential',
-				base: 1,
+				base: 3,
 				exponent: 3,
 				stepNum: 4
 			}
@@ -29,7 +29,7 @@ describe('NumericDimension', function() {
 		this.numeric4 = new NumericDimension('numeric4', {
 			step: {
 				type: 'exponential',
-				base: 2,
+				base: 6,
 				exponent: 3,
 				stepNum: 4
 			}
@@ -43,7 +43,7 @@ describe('NumericDimension', function() {
 			expect(numeric.tokenConfig).to.deep.equal({
 				step: {
 					type: 'exponential',
-					base: 1,
+					base: 2,
 					exponent: 2,
 					stepNum: 8
 				}
@@ -57,7 +57,7 @@ describe('NumericDimension', function() {
 			expect(numeric2.tokenConfig).to.deep.equal({
 				step: {
 					type: 'exponential',
-					base: 1,
+					base: 3,
 					exponent: 3,
 					stepNum: 4
 				}
@@ -80,7 +80,7 @@ describe('NumericDimension', function() {
 			expect(numeric4.tokenConfig).to.deep.equal({
 				step: {
 					type: 'exponential',
-					base: 2,
+					base: 6,
 					exponent: 3,
 					stepNum: 4
 				}
