@@ -264,6 +264,13 @@ describe('NumericDimension', function() {
 			expect(tokens).to.be.an('array');
 			expect(tokens).to.have.length(1);
 			expect(tokens).to.include('6^6');
+
+			range = [ -8, -2 ];
+			tokens = this.numeric.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(2);
+			expect(tokens).to.include('-8^4');
+			expect(tokens).to.include('-4^2');
 		});
 
 		it('should return all tokens for range that doesn\'t fall on grid', function() {
@@ -325,6 +332,14 @@ describe('NumericDimension', function() {
 			expect(tokens).to.include('36^6');
 			expect(tokens).to.include('12^6');
 			expect(tokens).to.include('6^6');
+
+			range = [ -9, -3 ];
+			tokens = this.numeric.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(3);
+			expect(tokens).to.include('-8^4');
+			expect(tokens).to.include('-4^2');
+			expect(tokens).to.include('-10^2');
 		});
 	});
 
