@@ -7,7 +7,7 @@ describe('Polytype', function() {
 			step: {
 				type: 'exponential',
 				base: 2,
-				exponent: 2,
+				multiplier: 2,
 				stepNum: 4
 			}
 		});
@@ -15,7 +15,7 @@ describe('Polytype', function() {
 			step: {
 				type: 'exponential',
 				base: 3,
-				exponent: 3,
+				multiplier: 3,
 				stepNum: 2
 			}
 		});

@@ -7,7 +7,7 @@ describe('LongLatPrecise', function() {
 			step: {
 				type: 'exponential',
 				base: 2,
-				exponent: 2,
+				multiplier: 2,
 				stepNum: 8
 			}
 		});
@@ -21,7 +21,7 @@ describe('LongLatPrecise', function() {
 				step: {
 					type: 'exponential',
 					base: 2,
-					exponent: 2,
+					multiplier: 2,
 					stepNum: 8
 				}
 			});

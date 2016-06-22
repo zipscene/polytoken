@@ -9,7 +9,7 @@ describe('TimeDimension', function() {
 			step: {
 				type: 'exponential',
 				base: 100,
-				exponent: 10,
+				multiplier: 10,
 				stepNum: 5
 			}
 		});

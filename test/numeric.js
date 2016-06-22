@@ -8,7 +8,7 @@ describe('NumericDimension', function() {
 			step: {
 				type: 'exponential',
 				base: 2,
-				exponent: 2,
+				multiplier: 2,
 				stepNum: 8
 			}
 		});
@@ -16,7 +16,7 @@ describe('NumericDimension', function() {
 			step: {
 				type: 'exponential',
 				base: 3,
-				exponent: 3,
+				multiplier: 3,
 				stepNum: 4
 			}
 		});
@@ -30,7 +30,7 @@ describe('NumericDimension', function() {
 			step: {
 				type: 'exponential',
 				base: 6,
-				exponent: 3,
+				multiplier: 3,
 				stepNum: 4
 			}
 		});
@@ -44,7 +44,7 @@ describe('NumericDimension', function() {
 				step: {
 					type: 'exponential',
 					base: 2,
-					exponent: 2,
+					multiplier: 2,
 					stepNum: 8
 				}
 			});
@@ -58,7 +58,7 @@ describe('NumericDimension', function() {
 				step: {
 					type: 'exponential',
 					base: 3,
-					exponent: 3,
+					multiplier: 3,
 					stepNum: 4
 				}
 			});
@@ -81,7 +81,7 @@ describe('NumericDimension', function() {
 				step: {
 					type: 'exponential',
 					base: 6,
-					exponent: 3,
+					multiplier: 3,
 					stepNum: 4
 				}
 			});
