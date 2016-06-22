@@ -106,5 +106,18 @@ describe('LongLatDimension', function() {
 			expect(tokens).to.have.length(1);
 			expect(tokens).to.include('0,8^8');
 		});
+
+		it('should generate correct tokens for polygon covering meridian', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 182, 2 ], [ 184, 2 ], [ 184, 4 ], [ 182, 4 ], [ 182, 2 ] ]
+				]
+			};
+			let tokens = this.longLatDimension.getRangeTokens(range);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(1);
+			expect(tokens).to.include('-178,4^2');
+		});
 	});
 });

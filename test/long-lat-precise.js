@@ -6,7 +6,7 @@ describe('LongLatPrecise', function() {
 		this.longLatDimension = new LongLatPrecise({
 			step: {
 				type: 'exponential',
-				base: 1,
+				base: 2,
 				exponent: 2,
 				stepNum: 8
 			}
@@ -16,11 +16,11 @@ describe('LongLatPrecise', function() {
 	describe('#constructor', function() {
 		it('should set name, config object and generate steps', function() {
 			let longLatDimension = this.longLatDimension;
-			expect(longLatDimension).to.have.property('name', 'long-lat');
+			expect(longLatDimension).to.have.property('name', 'LongLatPrecise');
 			expect(longLatDimension.tokenConfig).to.deep.equal({
 				step: {
 					type: 'exponential',
-					base: 1,
+					base: 2,
 					exponent: 2,
 					stepNum: 8
 				}
@@ -34,7 +34,7 @@ describe('LongLatPrecise', function() {
 	describe('#getName', function() {
 		it('should return name of this dimension', function() {
 			let name = this.longLatDimension.getName();
-			expect(name).to.equal('long-lat');
+			expect(name).to.equal('LongLatPrecise');
 		});
 	});
 
@@ -339,7 +339,7 @@ describe('LongLatPrecise', function() {
 			};
 			let tokens = this.longLatDimension.getTokensForPoint(point);
 			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(18);
+			expect(tokens).to.have.length(9);
 			expect(tokens).to.include('0,256^256');
 			expect(tokens).to.include('0,128^128');
 			expect(tokens).to.include('0,64^64');
@@ -349,15 +349,15 @@ describe('LongLatPrecise', function() {
 			expect(tokens).to.include('0,4^4');
 			expect(tokens).to.include('2,4^2');
 			expect(tokens).to.include('0,4^2');
-			expect(tokens).to.include('-512,256^256');
-			expect(tokens).to.include('-384,128^128');
-			expect(tokens).to.include('-384,64^64');
-			expect(tokens).to.include('-384,32^32');
-			expect(tokens).to.include('-368,16^16');
-			expect(tokens).to.include('-360,8^8');
-			expect(tokens).to.include('-360,4^4');
-			expect(tokens).to.include('-358,4^2');
-			expect(tokens).to.include('-360,4^2');
+			// expect(tokens).to.include('-512,256^256');
+			// expect(tokens).to.include('-384,128^128');
+			// expect(tokens).to.include('-384,64^64');
+			// expect(tokens).to.include('-384,32^32');
+			// expect(tokens).to.include('-368,16^16');
+			// expect(tokens).to.include('-360,8^8');
+			// expect(tokens).to.include('-360,4^4');
+			// expect(tokens).to.include('-358,4^2');
+			// expect(tokens).to.include('-360,4^2');
 
 			point = {
 				type: 'Point',
@@ -365,6 +365,7 @@ describe('LongLatPrecise', function() {
 			};
 			tokens = this.longLatDimension.getTokensForPoint(point);
 			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(11);
 			expect(tokens).to.include('0,256^256');
 			expect(tokens).to.include('0,128^128');
 			expect(tokens).to.include('0,64^64');
@@ -376,17 +377,18 @@ describe('LongLatPrecise', function() {
 			expect(tokens).to.include('2,2^2');
 			expect(tokens).to.include('0,4^2');
 			expect(tokens).to.include('0,2^2');
-			expect(tokens).to.include('-512,256^256');
-			expect(tokens).to.include('-384,128^128');
-			expect(tokens).to.include('-384,64^64');
-			expect(tokens).to.include('-384,32^32');
-			expect(tokens).to.include('-368,16^16');
-			expect(tokens).to.include('-360,8^8');
-			expect(tokens).to.include('-360,4^4');
-			expect(tokens).to.include('-358,4^2');
-			expect(tokens).to.include('-360,4^2');
-			expect(tokens).to.include('-358,2^2');
-			expect(tokens).to.include('-360,2^2');
+
+			// expect(tokens).to.include('-512,256^256');
+			// expect(tokens).to.include('-384,128^128');
+			// expect(tokens).to.include('-384,64^64');
+			// expect(tokens).to.include('-384,32^32');
+			// expect(tokens).to.include('-368,16^16');
+			// expect(tokens).to.include('-360,8^8');
+			// expect(tokens).to.include('-360,4^4');
+			// expect(tokens).to.include('-358,4^2');
+			// expect(tokens).to.include('-360,4^2');
+			// expect(tokens).to.include('-358,2^2');
+			// expect(tokens).to.include('-360,2^2');
 		});
 	});
 });
