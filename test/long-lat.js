@@ -119,5 +119,22 @@ describe('LongLatDimension', function() {
 			expect(tokens).to.have.length(1);
 			expect(tokens).to.include('-178,4^2');
 		});
+
+		it('should handle MultiPolygon', function() {
+			let range = {
+				type: 'MultiPolygon',
+				coordinates: [
+					[ [ [ 28, 35 ], [ 28, 10 ], [ 48, 10 ], [ 48, 35 ], [ 28, 35 ] ] ],
+					[ [ [ 1, 1 ], [ 1, 2 ], [ 2, 2 ], [ 2, 1 ], [ 1, 1 ] ] ]
+				]
+			};
+			let tokens = this.longLatDimension.getRangeTokens(range);
+			expect(tokens.length).to.equal(5);
+			expect(tokens).to.include('0,64^32');
+			expect(tokens).to.include('0,32^32');
+			expect(tokens).to.include('32,64^32');
+			expect(tokens).to.include('32,32^32');
+			expect(tokens).to.include('0,2^2');
+		});
 	});
 });
