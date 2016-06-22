@@ -327,7 +327,7 @@ describe('LongLatPrecise', function() {
 			expect(tokens).to.have.length(3);
 			expect(tokens).to.include('178,2^2');
 			expect(tokens).to.include('180,2^2');
-			expect(tokens).to.include('182,2^2');
+			expect(tokens).to.include('-178,2^2');
 		});
 	});
 });
