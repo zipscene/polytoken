@@ -98,7 +98,10 @@ describe('LongLatPrecise', function() {
 			} catch (ex) {
 				expect(ex).to.exist;
 				expect(ex).to.have.property('code', 'invalid_range');
-				expect(ex).to.have.property('message', 'range of long-lat dimension is not a valid polygon');
+				expect(ex).to.have.property(
+					'message',
+					'range of long-lat dimension is not a valid Polygon or MultiPolygon'
+				);
 			}
 		});
 
