@@ -1,203 +1,80 @@
-const _ = require('lodash');
-const moment = require('moment');
-const { expect } = require('chai');
+let expect = require('chai').expect;
 const { coreDimensions: { TimeDimension } } = require('../lib');
+const _ = require('lodash');
 
 describe('TimeDimension', function() {
+
 	before(function() {
-		this.time = new TimeDimension({
+		this.dimension = new TimeDimension({
 			step: {
-				type: 'customized',
-				steps: [ 1000, 60000, 3600000, 86400000 ]
+				type: 'exponential',
+				base: 100,
+				exponent: 10,
+				stepNum: 5
 			}
 		});
 	});
 
-	describe('#constructor', function() {
-		it('should set name and tokenConfig', function() {
-			expect(this.time).to.be.instanceof(TimeDimension);
-			expect(this.time).to.have.property('name', 'time');
-			expect(this.time.tokenConfig).to.deep.equal({
-				step: {
-					type: 'customized',
-					steps: [ 86400000, 3600000, 60000, 1000 ]
-				}
-			});
-		});
-	});
-
-	describe('#getName', function() {
-		it('should get name of time dimension', function() {
-			let name = this.time.getName();
-			expect(name).to.equal('time');
-		});
-	});
-
-	describe('#validateRange', function() {
-		it('should return true for valid range of timestamps', function() {
-			let range = [ Date.now(), Date.now() + 10 ];
-			expect(this.time.validateRange(range)).to.be.true;
-		});
-
-		it('should return true for valid range of Date instances', function() {
-			let range = [ new Date(), new Date(Date.now() + 10) ];
-			expect(this.time.validateRange(range)).to.be.true;
-		});
-
-		it('should return true for valid range of ISO date strings', function() {
-			let date1 = new Date();
-			let date2 = new Date(Date.now() + 10);
-			let range = [ date1.toISOString(), date2.toISOString() ];
-			expect(this.time.validateRange(range)).to.be.true;
-		});
-	});
-
-	describe('#validatePoint', function() {
-		it('should return true for valid point of timestamps', function() {
-			let point = Date.now();
-			expect(this.time.validatePoint(point)).to.be.true;
-		});
-
-		it('should return true for valid point of Date instances', function() {
-			let point = new Date();
-			expect(this.time.validatePoint(point)).to.be.true;
-		});
-
-		it('should return true for valid point of ISO date strings', function() {
-			let point = (new Date()).toISOString();
-			expect(this.time.validatePoint(point)).to.be.true;
-		});
-	});
-
-	describe('#normalizeRange', function() {
-		it('should return a range of timestamps for a given range Date instance', function() {
-			let time = Date.now();
-			let range = [ new Date(time), new Date(time + 10) ];
-			let normalizedRange = this.time.normalizeRange(range);
-			expect(normalizedRange).to.be.an('array');
-			expect(normalizedRange).to.have.length(2);
-			expect(normalizedRange).to.include(time);
-			expect(normalizedRange).to.include(time + 10);
-		});
-
-		it('should return a range of timestamps for a given range of date string', function() {
-			let date1 = new Date();
-			let date2 = new Date(date1.getTime() + 10);
-			let range = [ date1.toISOString(), date2.toISOString() ];
-			let normalizedRange = this.time.normalizeRange(range);
-			expect(normalizedRange).to.be.an('array');
-			expect(normalizedRange).to.have.length(2);
-			expect(normalizedRange).to.include(date1.getTime());
-			expect(normalizedRange).to.include(date2.getTime());
-		});
-
-		it('should return a range of timestamps for a given range of timestamps', function() {
-			let time = Date.now();
-			let range = [ time, time + 10 ];
-			let normalizedRange = this.time.normalizeRange(range);
-			expect(normalizedRange).to.be.an('array');
-			expect(normalizedRange).to.have.length(2);
-			expect(normalizedRange).to.include(time);
-			expect(normalizedRange).to.include(time + 10);
-		});
-	});
-
-	describe('#normalizePoint', function() {
-		it('should return timestamp for a given Date instance', function() {
-			let date = new Date();
-			let normalizedPoint = this.time.normalizePoint(date);
-			expect(normalizedPoint).to.equal(date.getTime());
-		});
-
-		it('should return timestamp for a given date string', function() {
-			let date = new Date();
-			let normalizedPoint = this.time.normalizePoint(date.toISOString());
-			expect(normalizedPoint).to.equal(date.getTime());
-		});
-
-		it('should return timestamp for a given timestamp', function() {
-			let date = new Date();
-			let normalizedPoint = this.time.normalizePoint(date.getTime());
-			expect(normalizedPoint).to.equal(date.getTime());
-		});
-
-	});
-
 	describe('#getRangeTokens', function() {
-		it('should return all tokens for valid range', function() {
-			let begin = moment.utc('2016-01-02 03:05:00.000');
-			let end = moment.utc('2016-01-02 03:06:00.000');
-			let beginTime = begin.valueOf();
-			let tokens = this.time.getRangeTokens([ begin, end ]);
-			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(1);
-			expect(tokens).to.include(`${beginTime}^60000`);
 
-			begin = moment.utc('2016-01-02 03:00:00.000');
-			end = moment.utc('2016-01-02 04:00:00.000');
-			beginTime = begin.valueOf();
-			tokens = this.time.getRangeTokens([ begin, end ]);
-			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(1);
-			expect(tokens).to.include(`${beginTime}^3600000`);
-
-			begin = moment.utc('2016-01-02 00:00:00.000');
-			end = moment.utc('2016-01-03 00:00:00.000');
-			beginTime = begin.valueOf();
-			tokens = this.time.getRangeTokens([ begin, end ]);
-			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(1);
-			expect(tokens).to.include(`${beginTime}^86400000`);
-
-			begin = moment.utc('2016-01-02 01:02:03.000');
-			end = moment.utc('2016-01-02 02:01:03.000');
-			tokens = this.time.getRangeTokens([ begin, end ]);
-			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(118);
-			let firstMinute = moment.utc('2016-01-02 01:03:00.000');
-			let lastSecond = moment.utc('2016-01-02 02:01:02.000');
-			beginTime = begin.valueOf();
-			expect(tokens).to.include(`${firstMinute.valueOf()}^60000`);
-			expect(tokens).to.include(`${beginTime}^1000`);
-			expect(tokens).to.include(`${lastSecond.valueOf()}^1000`);
+		it('should return up to two tokens for a range', function() {
+			let range1 = [ '2015-12-25T00:00:00Z', '2015-12-25T23:59:59Z' ];
+			let tokens1 = [ '1451000000^100000' ];
+			expect(this.dimension.getRangeTokens(range1)).to.deep.equal(tokens1);
+			let range2 = [ '2015-12-26T00:00:00Z', '2015-12-26T23:59:59Z' ];
+			let tokens2 = [ '1451000000^100000', '1451100000^100000' ];
+			expect(this.dimension.getRangeTokens(range2)).to.deep.equal(tokens2);
+			let range3 = [ '2015-12-25T00:00:00Z', '2015-12-25T00:59:59Z' ];
+			let tokens3 = [ '1451000000^10000' ];
+			expect(this.dimension.getRangeTokens(range3)).to.deep.equal(tokens3);
+			let range4 = [ '2015-12-25T00:00:00Z', '2015-12-25T00:00:02Z' ];
+			let tokens4 = [ '1451001600^100' ];
+			expect(this.dimension.getRangeTokens(range4)).to.deep.equal(tokens4);
 		});
+
+		it('should fill up very large time ranges', function() {
+			let range = [ '2015-01-01T00:00:00Z', '2015-04-01T00:00:00Z' ];
+			let tokens = [
+				'1420000000^1000000',
+				'1421000000^1000000',
+				'1422000000^1000000',
+				'1423000000^1000000',
+				'1424000000^1000000',
+				'1425000000^1000000',
+				'1426000000^1000000',
+				'1427000000^1000000'
+			];
+			expect(this.dimension.getRangeTokens(range)).to.deep.equal(tokens);
+		});
+
 	});
 
 	describe('#getTokensForPoint', function() {
-		it('should return all tokens for a valid point', function() {
-			let time = moment.utc('2016-01-02 00:00:00.000');
-			let tokens = this.time.getTokensForPoint(time);
-			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(4);
-			expect(tokens).to.include(`${time.valueOf()}^1000`);
-			expect(tokens).to.include(`${time.valueOf()}^60000`);
-			expect(tokens).to.include(`${time.valueOf()}^3600000`);
-			expect(tokens).to.include(`${time.valueOf()}^86400000`);
 
-			time = moment.utc('2016-01-02 13:30:32.379');
-			tokens = this.time.getTokensForPoint(time);
-			let beginSecond = moment.utc('2016-01-02 13:30:32.000');
-			let beginMinute = moment.utc('2016-01-02 13:30:00.000');
-			let beginHour = moment.utc('2016-01-02 13:00:00.000');
-			let beginDay = moment.utc('2016-01-02 00:00:00.000');
-			expect(tokens).to.be.an('array');
-			expect(tokens).to.have.length(4);
-			expect(tokens).to.include(`${beginSecond}^1000`);
-			expect(tokens).to.include(`${beginMinute}^60000`);
-			expect(tokens).to.include(`${beginHour}^3600000`);
-			expect(tokens).to.include(`${beginDay}^86400000`);
+		it('should return all required tokens', function() {
+			let point = '2015-12-25T00:00:00Z';
+			let pointTokens = [];
+			expect(this.dimension.getTokensForPoint(point).length).to.equal(5);
+			expect(this.dimension.getTokensForPoint(point)).to.include('1451000000^1000000');
+			expect(this.dimension.getTokensForPoint(point)).to.include('1451000000^100000');
+			expect(this.dimension.getTokensForPoint(point)).to.include('1451000000^10000');
+			expect(this.dimension.getTokensForPoint(point)).to.include('1451001000^1000');
+			expect(this.dimension.getTokensForPoint(point)).to.include('1451001600^100');
 		});
 
-		it('should return tokens that insect with range tokens', function() {
-			let point = moment.utc('2016-01-02 00:05:04.000');
-			let range = [ moment.utc('2016-01-02 00:00:00.000'), moment.utc('2016-01-02 01:00:00.000') ];
-			let rangeTokens = this.time.getRangeTokens(range);
-			let pointTokens = this.time.getTokensForPoint(point);
-			expect(rangeTokens).to.be.an('array');
-			expect(pointTokens).to.be.an('array');
-			expect(rangeTokens).to.have.length.above(0);
-			expect(pointTokens).to.have.length.above(0);
-			expect(_.intersection(rangeTokens, pointTokens)).to.have.length.above(0);
-		});
 	});
+
+	describe('#checkRangeInclusion', function() {
+
+		it('should accurately assess range inclusion', function() {
+			let range = [ '2015-12-25T00:00:00Z', '2015-12-25T23:59:59Z' ];
+			expect(this.dimension.checkRangeInclusion(range, '2014-01-01T00:00:00Z')).to.equal(false);
+			expect(this.dimension.checkRangeInclusion(range, '2015-12-25T00:00:00Z')).to.equal(true);
+			expect(this.dimension.checkRangeInclusion(range, '2015-12-25T15:00:00Z')).to.equal(true);
+			expect(this.dimension.checkRangeInclusion(range, '2015-12-25T23:59:59Z')).to.equal(true);
+			expect(this.dimension.checkRangeInclusion(range, '2016-01-01T00:00:00Z')).to.equal(false);
+		});
+
+	});
+
 });

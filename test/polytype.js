@@ -6,7 +6,7 @@ describe('Polytype', function() {
 		this.numeric1 = new NumericDimension('numeric1', {
 			step: {
 				type: 'exponential',
-				base: 1,
+				base: 2,
 				exponent: 2,
 				stepNum: 4
 			}
@@ -14,7 +14,7 @@ describe('Polytype', function() {
 		this.numeric2 = new NumericDimension('numeric2', {
 			step: {
 				type: 'exponential',
-				base: 1,
+				base: 3,
 				exponent: 3,
 				stepNum: 2
 			}

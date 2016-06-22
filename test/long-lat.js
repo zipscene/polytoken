@@ -6,7 +6,7 @@ describe('LongLatDimension', function() {
 		this.longLatDimension = new LongLatDimension({
 			step: {
 				type: 'exponential',
-				base: 1,
+				base: 2,
 				exponent: 2,
 				stepNum: 8
 			}
