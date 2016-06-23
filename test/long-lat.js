@@ -13,6 +13,184 @@ describe('LongLatDimension', function() {
 		});
 	});
 
+	describe('#validateRange', function() {
+		it('should return true for valid polygon', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [ [
+					[ 100.0, 0.0 ], [ 101.0, 0.0 ], [ 101.0, 1.0 ], [ 100.0, 1.0 ], [ 100.0, 0.0 ]
+				] ]
+			};
+			expect(this.longLatDimension.validateRange(range)).to.be.true;
+
+			range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 100.0, 0.0 ], [ 104.0, 0.0 ], [ 104.0, 4.0 ], [ 100.0, 4.0 ], [ 100.0, 0.0 ] ],
+					[ [ 101.0, 0.0 ], [ 103.0, 0.0 ], [ 103.0, 2.0 ], [ 101.0, 2.0 ], [ 101.0, 0.0 ] ]
+				]
+			};
+			expect(this.longLatDimension.validateRange(range)).to.be.true;
+
+			range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 178, 0 ], [ 182, 0 ], [ 182, 2 ], [ 178, 2 ], [ 178, 0 ] ]
+				]
+			};
+			expect(this.longLatDimension.validateRange(range)).to.be.true;
+
+			range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ -178, 0 ], [ -182, 0 ], [ -182, 2 ], [ -178, 2 ], [ -178, 0 ] ]
+				]
+			};
+			expect(this.longLatDimension.validateRange(range)).to.be.true;
+
+		});
+
+		it('should throw error for invalid geojson object', function() {
+			let range = {
+				type: 'unknown'
+			};
+			try {
+				this.longLatDimension.validateRange(range);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property('message', 'range of long-lat dimension is not a valid geojson object');
+			}
+		});
+
+		it('should throw error for non-polygon geojson object', function() {
+			let range = {
+				type: 'Point',
+				coordinates: [ 102.0, 0.5 ]
+			};
+			try {
+				this.longLatDimension.validateRange(range);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property(
+					'message',
+					'range of long-lat dimension is not a valid Polygon or MultiPolygon'
+				);
+			}
+		});
+
+		it('should throw error for invalid polygon', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 100.0, 0.0 ], [ 104.0, 0.0 ], [ 104.0, 4.0 ], [ 100.0, 4.0 ], [ 100.0, 0.0 ] ],
+					[ [ 90.0, 0.0 ], [ 91.0, 0.0 ], [ 91.0, 1.0 ], [ 90.0, 1.0 ], [ 90.0, 0.0 ] ]
+				]
+			};
+			try {
+				this.longLatDimension.validateRange(range);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property('message', 'range of long-lat dimension is not a valid polygon');
+			}
+
+			range = {
+				type: 'Polygon',
+				coordinates: []
+			};
+			try {
+				this.longLatDimension.validateRange(range);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_range');
+				expect(ex).to.have.property('message', 'range of long-lat dimension is not a valid polygon');
+			}
+		});
+	});
+
+	describe('#validatePoint', function() {
+		it('should return true for valid geojson point', function() {
+			let point = {
+				type: 'Point',
+				coordinates: [ 1, 2 ]
+			};
+			expect(this.longLatDimension.validatePoint(point)).to.be.true;
+		});
+
+		it('should throw error for invalid geojson object', function() {
+			let point = {
+				type: 'unknown'
+			};
+			try {
+				this.longLatDimension.validatePoint(point);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_point');
+				expect(ex).to.have.property('message', 'point of long-lat dimension is not a valid geojson object');
+			}
+		});
+
+		it('should throw error for non-point geojson object', function() {
+			let point = {
+				type: 'LineString',
+				coordinates: [ [ 102.0, 0.0 ], [ 103.0, 1.0 ], [ 104.0, 0.0 ], [ 105.0, 1.0 ] ]
+			};
+			try {
+				this.longLatDimension.validatePoint(point);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_point');
+				expect(ex).to.have.property('message', 'point of long-lat dimension is not a valid point');
+			}
+		});
+
+		it('should throw error for invalid geojson point', function() {
+			let point = {
+				type: 'Point',
+				coordinates: [ 380, 97 ]
+			};
+			try {
+				this.longLatDimension.validatePoint(point);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_point');
+				expect(ex).to.have.property('message', 'point of long-lat dimension is not a valid point');
+			}
+
+			point = {
+				type: 'Point',
+				coordinates: [ 182, 40 ]
+			};
+			try {
+				this.longLatDimension.validatePoint(point);
+			} catch (ex) {
+				expect(ex).to.exist;
+				expect(ex).to.have.property('code', 'invalid_point');
+				expect(ex).to.have.property('message', 'point of long-lat dimension is not a valid point');
+			}
+		});
+	});
+
+	describe('#normalizeRange', function() {
+		it('should return the polygon if it is a normal polygon', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 1, 0 ], [ 0, 0 ] ]
+				]
+			};
+			this.longLatDimension.normalizeRange(range);
+			expect(range).to.deep.equal({
+				type: 'Polygon',
+				coordinates: [
+					[ [ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 1, 0 ], [ 0, 0 ] ]
+				]
+			});
+		});
+	});
+
 	describe('#getRangeTokens', function() {
 		it('should return all the tokens for convex polygon that doesn\'t have holes', function() {
 			let range = {
@@ -136,5 +314,29 @@ describe('LongLatDimension', function() {
 			expect(tokens).to.include('32,32^32');
 			expect(tokens).to.include('0,2^2');
 		});
+	});
+
+	describe('#getTokensForPoint', function() {
+		it('should get all tokens covering the given point', function() {
+			let point = {
+				type: 'Point',
+				coordinates: [ 3, 3 ]
+			};
+			let tokens = this.longLatDimension.getTokensForPoint(point);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(8);
+			expect(tokens).to.include('0,256^256');
+			expect(tokens).to.include('0,128^128');
+			expect(tokens).to.include('0,64^64');
+			expect(tokens).to.include('0,32^32');
+			expect(tokens).to.include('0,16^16');
+			expect(tokens).to.include('0,8^8');
+			expect(tokens).to.include('0,4^4');
+			expect(tokens).to.include('2,4^2');
+		});
+	});
+
+	describe('#checkRangeInclusion', function() {
+		it('should return true for point inside polygon', function() {});
 	});
 });

@@ -92,6 +92,35 @@ describe('utils', function() {
 			result = utils.isPointInsidePolygon(point, polygon);
 			expect(result).to.equal(true);
 		});
+
+		it('should return true for point in MultiPolygon', function() {
+			let range = {
+				type: 'MultiPolygon',
+				coordinates: [ [
+					[ [ 0, 0 ], [ 2, 0 ], [ 2, 2 ], [ 0, 2 ], [ 0, 0 ] ],
+					[ [ 4, 4 ], [ 5, 4 ], [ 5, 5 ], [ 4, 5 ], [ 4, 4 ] ]
+				] ]
+			};
+			let point = [ 1, 1 ];
+			let result = utils.isPointInsidePolygon(point, range);
+			expect(result).to.equal(true);
+
+			range = {
+				type: 'MultiPolygon',
+				coordinates: [
+					[
+						[ [ 0, 0 ], [ 8, 0 ], [ 8, 8 ], [ 0, 8 ], [ 0, 0 ] ],
+						[ [ 1, 1 ], [ 7, 1 ], [ 7, 7 ], [ 1, 7 ], [ 1, 1 ] ]
+					],
+					[
+						[ [ 2, 2 ], [ 4, 2 ], [ 4, 4 ], [ 2, 4 ], [ 2, 2 ] ]
+					]
+				]
+			};
+			point = [ 3, 3 ];
+			result = utils.isPointInsidePolygon(point, range);
+			expect(result).to.equal(true);
+		});
 	});
 
 	describe('#genTokensForLongLatPoint', function() {
