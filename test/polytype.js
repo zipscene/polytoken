@@ -109,4 +109,19 @@ describe('Polytype', function() {
 			}
 		});
 	});
+
+	describe('#checkRangeInclusion', function() {
+		it('should accurately assess range inclusion', function() {
+			let polytype = new Polytype([ this.numeric1, this.numeric2 ]);
+			let rangeTuple = [
+				[ 1, 5 ],
+				[ 10, 50 ]
+			];
+			expect(polytype.checkRangeInclusion(rangeTuple, [ 2, 20 ])).to.equal(true);
+			expect(polytype.checkRangeInclusion(rangeTuple, [ 1, 25 ])).to.equal(true);
+			expect(polytype.checkRangeInclusion(rangeTuple, [ 4, 50 ])).to.equal(true);
+			expect(polytype.checkRangeInclusion(rangeTuple, [ 3, 55 ])).to.equal(false);
+		});
+	});
+
 });
