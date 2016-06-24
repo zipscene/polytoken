@@ -119,6 +119,11 @@ describe('LongLatDimension', function() {
 			expect(this.longLatDimension.validatePoint(point)).to.be.true;
 		});
 
+		it('should allow simple longlat array', function() {
+			let point = [ 3, 4 ];
+			expect(this.longLatDimension.validatePoint(point)).to.be.true;
+		});
+
 		it('should throw error for invalid geojson object', function() {
 			let point = {
 				type: 'unknown'
