@@ -50,6 +50,14 @@ describe('LongLatDimension', function() {
 
 		});
 
+		it('should return true for valid point/radius pair', function() {
+			let range = {
+				point: [ 30, 40 ],
+				radius: 1000
+			};
+			expect(this.longLatDimension.validateRange(range)).to.be.true;
+		});
+
 		it('should throw error for invalid geojson object', function() {
 			let range = {
 				type: 'unknown'
@@ -194,6 +202,21 @@ describe('LongLatDimension', function() {
 				]
 			});
 		});
+
+		it('should return a validate point/radius pair', function() {
+			let range = {
+				point: [ 30, 40 ],
+				radius: 1000
+			};
+			let normalized = this.longLatDimension.normalizeRange(range);
+			expect(normalized).to.deep.equal({
+				point: {
+					type: 'Point',
+					coordinates: [ 30, 40 ]
+				},
+				radius: 1000
+			});
+		});
 	});
 
 	describe('#getRangeTokens', function() {
@@ -319,6 +342,20 @@ describe('LongLatDimension', function() {
 			expect(tokens).to.include('32,32^32');
 			expect(tokens).to.include('0,2^2');
 		});
+
+		it('should handle point/range pair', function() {
+			let range = {
+				point: [ -80, 30 ],
+				radius: 10000
+			};
+			let rangeTokens = this.longLatDimension.getRangeTokens(range);
+			expect(rangeTokens).to.have.length(4);
+			expect(rangeTokens).to.include('-82,32^2');
+			expect(rangeTokens).to.include('-82,30^2');
+			expect(rangeTokens).to.include('-82,32^2');
+			expect(rangeTokens).to.include('-80,30^2');
+		});
+
 	});
 
 	describe('#getTokensForPoint', function() {
@@ -343,5 +380,16 @@ describe('LongLatDimension', function() {
 
 	describe('#checkRangeInclusion', function() {
 		it('should return true for point inside polygon', function() {});
+
+		it('should work correctly for point/range pair', function() {
+			let range = {
+				point: [ 30, 40 ],
+				radius: 10000
+			};
+			let insidePoint = [ 30.05, 40.05 ];
+			expect(this.longLatDimension.checkRangeInclusion(range, insidePoint)).to.equal(true);
+			let outsidePoint = [ 30.1, 40.1 ];
+			expect(this.longLatDimension.checkRangeInclusion(range, outsidePoint)).to.equal(false);
+		});
 	});
 });
