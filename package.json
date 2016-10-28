@@ -1,6 +1,6 @@
 {
   "name": "zs-polytoken",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "POLYTOKEN",
   "main": "./dist/lib/index.js",
   "repository": {
