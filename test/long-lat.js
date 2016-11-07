@@ -392,4 +392,52 @@ describe('LongLatDimension', function() {
 			expect(this.longLatDimension.checkRangeInclusion(range, outsidePoint)).to.equal(false);
 		});
 	});
+
+	describe('#calculateBoundingBox', function() {
+
+		it('should work for Polygon', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 28, 35 ], [ 28, 10 ], [ 48, 10 ], [ 48, 35 ], [ 28, 35 ] ]
+				]
+			};
+			let box = this.longLatDimension.calculateBoundingBox(range);
+			expect(box).to.deep.equal({ east: 48, west: 28, north: 35, south: 10 });
+		});
+
+		it('should work for MultiPolygon', function() {
+			let range = {
+				type: 'MultiPolygon',
+				coordinates: [
+					[ [ [ 28, 35 ], [ 28, 10 ], [ 48, 10 ], [ 48, 35 ], [ 28, 35 ] ] ],
+					[ [ [ -1, -1 ], [ -1, -2 ], [ -2, -2 ], [ -2, -1 ], [ -1, -1 ] ] ]
+				]
+			};
+			let box = this.longLatDimension.calculateBoundingBox(range);
+			expect(box).to.deep.equal({ east: 48, west: -2, north: 35, south: -2 });
+		});
+
+		it('should work for point/radius pair', function() {
+			let range = {
+				point: [ -20, 30 ],
+				radius: 14
+			};
+			let box = this.longLatDimension.calculateBoundingBox(range);
+			expect(box).to.deep.equal({ east: -6, west: -34, north: 44, south: 16 });
+		});
+
+		it('should expand box for polygon that intersects prime meridian', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [
+					[ [ 179, 40 ], [ -179, 40 ], [ 179, 41 ], [ 179, 40 ] ]
+				]
+			};
+			let box = this.longLatDimension.calculateBoundingBox(range);
+			expect(box).to.deep.equal({ east: 180, west: -180, north: 41, south: 40 });
+		});
+
+	});
+
 });
