@@ -379,7 +379,18 @@ describe('LongLatDimension', function() {
 	});
 
 	describe('#checkRangeInclusion', function() {
-		it('should return true for point inside polygon', function() {});
+		it('should return true for point inside polygon', function() {
+			let range = {
+				type: 'Polygon',
+				coordinates: [ [
+					[ 0, 0 ], [ 0, 1 ], [ 1, 1 ], [ 1, 0 ], [ 0, 0 ]
+				] ]
+			};
+			let insidePoint = [ 0.5, 0.5 ];
+			expect(this.longLatDimension.checkRangeInclusion(range, insidePoint)).to.equal(true);
+			let outsidePoint = [ 1.5, 0.5 ];
+			expect(this.longLatDimension.checkRangeInclusion(range, outsidePoint)).to.equal(false);
+		});
 
 		it('should work correctly for point/range pair', function() {
 			let range = {
