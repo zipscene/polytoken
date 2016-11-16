@@ -1,12 +1,18 @@
 {
-  "name": "zs-polytoken",
+  "name": "polytoken",
   "version": "0.0.5",
-  "description": "POLYTOKEN",
+  "description": "Efficient database indexing for geospatial queries",
   "main": "./dist/lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git@git.zipscene.com:zsapilibs/zs-polytoken.git"
+    "url": "https://github.com/zipscene/polytoken.git"
   },
+  "keywords": [
+    "geo",
+    "indexing",
+    "polytoken",
+    "polytopen"
+  ],
   "scripts": {
     "lint": "node ./node_modules/.bin/eslint . || exit 0",
     "docs": "node ./node_modules/.bin/yuidoc .",
@@ -22,7 +28,7 @@
     "moment": "^2.13.0",
     "pasync": "^1.4.1",
     "xerror": "^1.1.1",
-    "zs-objtools": "^1.6.2"
+    "objtools": "^1.6.2"
   },
   "devDependencies": {
     "broccoli": "^0.16.9",
@@ -38,7 +44,5 @@
     "source-map-support": "^0.4.0",
     "yuidocjs": "^0.10.1"
   },
-  "publishConfig": {
-    "registry": "https://npm.zipscene.com/"
-  }
+  "license": "Apache-2.0"
 }

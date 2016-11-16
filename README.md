@@ -1,4 +1,4 @@
-# zs-polytoken
+# polytoken
 
 Polytoken is a utility that handles the hashing of one or more arbitrary data dimensions, for use in
 database indexing and queries.
@@ -6,7 +6,7 @@ database indexing and queries.
 ## Usage
 
 ```javascript
-const polytoken = require('zs-polytoken');
+const polytoken = require('polytoken');
 
 let longLatDimension = new polytoken.coreDimensions.LongLatDimension({
 	step: {

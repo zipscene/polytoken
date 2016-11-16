@@ -1,5 +1,5 @@
 {
-	"name": "zs-polytoken",
+	"name": "polytoken",
 	"description": "POLYTOKEN",
 	"options": {
 		"outdir": "./docs",
