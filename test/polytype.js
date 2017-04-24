@@ -23,6 +23,15 @@ describe('Polytype', function() {
 				stepNum: 2
 			}
 		});
+		this.numeric3 = new NumericDimension('numeric3', {
+			step: {
+				type: 'exponential',
+				base: 3,
+				multiplier: 3,
+				stepNum: 2
+			},
+			globalToken: true
+		});
 	});
 
 	describe('#constructor', function() {
@@ -70,6 +79,15 @@ describe('Polytype', function() {
 			expect(tokens).to.include('4^2&6^3');
 		});
 
+		it('should handle globalToken', function() {
+			let polytype = new Polytype([ this.numeric1, this.numeric3 ]);
+			let rangeTuple = [ [ 2, 6 ], '_GLOBAL_' ];
+			let tokens = polytype.getRangeTokens(rangeTuple);
+			expect(tokens.length).to.equal(2);
+			expect(tokens).to.include('2^2&_GLOBAL_');
+			expect(tokens).to.include('4^2&_GLOBAL_');
+		});
+
 		it('should fail when invalid ranges are given', function() {
 			let rangeTuple = [ 2, [ 3, 9 ] ];
 			let polyType = new Polytype([ this.numeric1, this.numeric2 ]);
@@ -100,6 +118,27 @@ describe('Polytype', function() {
 			expect(tokens).to.include('0^16&0^9');
 		});
 
+		it('should handle globalToken', function() {
+			let pointTuple = [ 2.3, 4.87 ];
+			let polyType = new Polytype([ this.numeric1, this.numeric3 ]);
+			let tokens = polyType.getTokensForPoint(pointTuple);
+			expect(tokens).to.be.an('array');
+			expect(tokens).to.have.length(12);
+			expect(tokens).to.include('2^2&3^3');
+			expect(tokens).to.include('2^2&0^9');
+			expect(tokens).to.include('2^2&3^3');
+			expect(tokens).to.include('2^2&_GLOBAL_');
+			expect(tokens).to.include('0^4&3^3');
+			expect(tokens).to.include('0^4&0^9');
+			expect(tokens).to.include('0^4&_GLOBAL_');
+			expect(tokens).to.include('0^8&3^3');
+			expect(tokens).to.include('0^8&0^9');
+			expect(tokens).to.include('0^8&_GLOBAL_');
+			expect(tokens).to.include('0^16&3^3');
+			expect(tokens).to.include('0^16&0^9');
+			expect(tokens).to.include('0^16&_GLOBAL_');
+		});
+
 
 		it('should fail when given invalid point', function() {
 			let pointTuple = [ 3, '5' ];
@@ -125,6 +164,17 @@ describe('Polytype', function() {
 			expect(polytype.checkRangeInclusion(rangeTuple, [ 1, 25 ])).to.equal(true);
 			expect(polytype.checkRangeInclusion(rangeTuple, [ 4, 50 ])).to.equal(true);
 			expect(polytype.checkRangeInclusion(rangeTuple, [ 3, 55 ])).to.equal(false);
+		});
+
+		it('should handle globalToken', function() {
+			let polytype = new Polytype([ this.numeric1, this.numeric3 ]);
+			let rangeTuple = [
+				[ 1, 5 ],
+				'_GLOBAL_'
+			];
+			expect(polytype.checkRangeInclusion(rangeTuple, [ 2, 20 ])).to.equal(true);
+			expect(polytype.checkRangeInclusion(rangeTuple, [ 3, 50000 ])).to.equal(true);
+			expect(polytype.checkRangeInclusion(rangeTuple, [ 7, 20 ])).to.equal(false);
 		});
 	});
 
