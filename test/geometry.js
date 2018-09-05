@@ -363,19 +363,20 @@ describe('geometry', function() {
 
 	describe('#getRayLineSegmentIntersectState', function() {
 		it('should return \'~intersect\' when ray and line segment are in the same line but not overlaping',
-		function() {
-			let line = [ [ 1, 1 ], [ 2, 2 ] ];
-			let ray = [ [ 3, 3 ], [ 4, 4 ] ];
-			expect(geometry.getRayLineSegmentIntersectState(ray, line)).to.equal('~intersect');
+			function() {
+				let line = [ [ 1, 1 ], [ 2, 2 ] ];
+				let ray = [ [ 3, 3 ], [ 4, 4 ] ];
+				expect(geometry.getRayLineSegmentIntersectState(ray, line)).to.equal('~intersect');
 
-			line = [ [ 0, 1 ], [ 0, 2 ] ];
-			ray = [ [ 0, 3 ], [ 0, 4 ] ];
-			expect(geometry.getRayLineSegmentIntersectState(ray, line)).to.equal('~intersect');
+				line = [ [ 0, 1 ], [ 0, 2 ] ];
+				ray = [ [ 0, 3 ], [ 0, 4 ] ];
+				expect(geometry.getRayLineSegmentIntersectState(ray, line)).to.equal('~intersect');
 
-			line = [ [ 1, 0 ], [ 2, 0 ] ];
-			ray = [ [ -1, 0 ], [ -2, 0 ] ];
-			expect(geometry.getRayLineSegmentIntersectState(ray, line)).to.equal('~intersect');
-		});
+				line = [ [ 1, 0 ], [ 2, 0 ] ];
+				ray = [ [ -1, 0 ], [ -2, 0 ] ];
+				expect(geometry.getRayLineSegmentIntersectState(ray, line)).to.equal('~intersect');
+			}
+		);
 
 		it('should return \'~intersect\' for eay and line segment that are parallal to each other', function() {
 			let line = [ [ 1, 1 ], [ 2, 2 ] ];
