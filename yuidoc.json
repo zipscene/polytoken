@@ -1,8 +1,0 @@
-{
-	"name": "polytoken",
-	"description": "POLYTOKEN",
-	"options": {
-		"outdir": "./docs",
-		"exclude": "dist,tmp,test,node_modules"
-	}
-}
